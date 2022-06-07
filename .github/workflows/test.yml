@@ -1,0 +1,36 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Get own public IP
+      id: public_ip
+      uses: haythem/public-ip@v1.2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.18
+
+    - name: Run tests
+      working-directory: ./test
+      run: go test -v --timeout 20m
+      env:
+        UPCLOUD_USERNAME: ${{ secrets.UPCLOUD_USERNAME }}
+        UPCLOUD_PASSWORD: ${{ secrets.UPCLOUD_PASSWORD }}
+        UPCLOUD_PRIVATE_SSH_KEY: ${{ secrets.UPCLOUD_PRIVATE_SSH_KEY }}
+        UPCLOUD_PUBLIC_SSH_KEY: ${{ secrets.UPCLOUD_PUBLIC_SSH_KEY }}
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        TF_VAR_cloudflare_zone_id: ${{ secrets. CLOUDFLARE_ZONE_ID }}
+        TF_VAR_own_public_ip: ${{ steps.public_ip.outputs.ipv4 }}
