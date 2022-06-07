@@ -5,7 +5,7 @@ Terraform module which creates an easy to scale web app with a managed database,
 ## Usage
 ```hcl
 module "app" {
-  source = "UpCloudLtd/highly-available-app/upcloud"
+  source = "UpCloudLtd/scalable-infrastructure/upcloud"
 
   app_name                   = "super_app"
   zone                       = "pl-waw1"
